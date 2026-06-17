@@ -1,0 +1,17 @@
+name: NoteScope
+version: 1.0.0
+main: io.github.astail.notescope.NoteScopePlugin
+description: "音符ブロックを見ると、設定されている音階（音名・ドレミ・調律番号・楽器）をアクションバーに表示します。"
+api-version: '26.1.2'
+
+commands:
+  notescope:
+    description: "自分の音階表示（アクションバー）を ON/OFF します。"
+    usage: "/notescope [on|off|status]"
+    permission: notescope.use
+    permission-message: "§cこのコマンドを実行する権限がありません。"
+
+permissions:
+  notescope.use:
+    description: "音階表示と /notescope コマンドの使用を許可します。"
+    default: true
