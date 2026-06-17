@@ -9,6 +9,8 @@ so you can tell what note a block is set to without having to play it.
 ♪ F#3 (ファ#)   調律 0/24   楽器: ハープ
 ```
 
+![The pitch shown on the action bar when looking at a note block](docs/screenshot.png)
+
 - **Note name** (`F#3`) … scientific pitch notation. Note blocks span F#3–F#5 (two octaves)
 - **Solfège** (`ファ#`) … Japanese do-re-mi name
 - **調律 0/24** … tuning step: `0` right after placing (F#3), `+1` per right-click, wraps at `24` (F#5)
