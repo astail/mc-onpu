@@ -16,21 +16,62 @@ import org.bukkit.Note;
  */
 final class NoteFormatter {
 
+    /**
+     * 各列を揃えるための目標幅（px）。取りうる全ての音・楽器を走査して最大幅を求める。
+     * 各列をこの幅まで右詰めパディングすることで、後続項目の開始位置と行の総幅が一定になり、
+     * 「♪」「調律」「楽器:」の表示位置がずれなくなる（音名・楽器名が変わっても固定）。
+     */
+    private static final int COL_NOTE_WIDTH;   // 「♪ 音名 (ドレミ)」
+    private static final int COL_TUNING_WIDTH; // 「  調律 n/24」
+    private static final int COL_INSTRUMENT_WIDTH; // 「  楽器: 名前」
+
+    static {
+        int noteW = 0;
+        int tuningW = 0;
+        int instrumentW = 0;
+        for (int id = 0; id <= 24; id++) {
+            Note note = new Note(id);
+            noteW = Math.max(noteW, FontWidth.width("♪ " + scientificName(note) + " (" + solfegeName(note) + ")"));
+            tuningW = Math.max(tuningW, FontWidth.width("  調律 " + id + "/24"));
+        }
+        for (Instrument instrument : Instrument.values()) {
+            instrumentW = Math.max(instrumentW, FontWidth.width("  楽器: " + instrumentName(instrument)));
+        }
+        COL_NOTE_WIDTH = noteW;
+        COL_TUNING_WIDTH = tuningW;
+        COL_INSTRUMENT_WIDTH = instrumentW;
+    }
+
     private NoteFormatter() {
     }
 
     /**
      * 例: 「♪ F#3 (ファ#)  調律 13/24  楽器: ハープ」
      *
+     * <p>各列を固定幅まで半角スペースでパディングし、視点を移しても「♪」「調律」「楽器:」が
+     * 横にずれないようにする。パディングの不可視スペースは各色の成分末尾に付与する。
+     *
      * @param note       音符ブロックの音（0〜24）
      * @param instrument 音符ブロックの楽器（真下のブロックで決まる）
      */
     static Component format(Note note, Instrument instrument) {
         int id = note.getId() & 0xFF; // byte → 0〜24
-        return Component.text("♪ " + scientificName(note), NamedTextColor.GOLD)
-                .append(Component.text(" (" + solfegeName(note) + ")", NamedTextColor.WHITE))
-                .append(Component.text("  調律 " + id + "/24", NamedTextColor.GRAY))
-                .append(Component.text("  楽器: " + instrumentName(instrument), NamedTextColor.AQUA));
+        String head = "♪ " + scientificName(note);          // GOLD
+        String solfege = " (" + solfegeName(note) + ")";     // WHITE
+        String tuning = "  調律 " + id + "/24";               // GRAY
+        String instrumentText = "  楽器: " + instrumentName(instrument); // AQUA
+
+        // ドレミ成分の末尾を詰めて「♪ 音名 (ドレミ)」全体を固定幅にする → 調律の開始位置が固定。
+        String solfegePadded = FontWidth.padRight(solfege, COL_NOTE_WIDTH - FontWidth.width(head));
+        // 調律列を固定幅にする → 楽器: の開始位置が固定。
+        String tuningPadded = FontWidth.padRight(tuning, COL_TUNING_WIDTH);
+        // 楽器列を固定幅にする → 行の総幅が一定 → 中央寄せが一定 → 行頭の ♪ も固定。
+        String instrumentPadded = FontWidth.padRight(instrumentText, COL_INSTRUMENT_WIDTH);
+
+        return Component.text(head, NamedTextColor.GOLD)
+                .append(Component.text(solfegePadded, NamedTextColor.WHITE))
+                .append(Component.text(tuningPadded, NamedTextColor.GRAY))
+                .append(Component.text(instrumentPadded, NamedTextColor.AQUA));
     }
 
     /** 科学的音名（例: F#3, C4）。オクターブ番号は C で繰り上がるため id から算出する。 */
