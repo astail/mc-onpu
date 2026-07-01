@@ -2,7 +2,7 @@ name: NoteScope
 version: 1.0.0
 main: io.github.astail.notescope.NoteScopePlugin
 description: "音符ブロックを見ると、設定されている音階（音名・ドレミ・調律番号・楽器）をアクションバーに表示します。"
-api-version: '26.1.2'
+api-version: '26.2'
 
 commands:
   notescope:

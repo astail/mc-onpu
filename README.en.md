@@ -32,7 +32,7 @@ Because it's a server-side plugin (not a client mod), **players need to install 
 
 | Item | Version |
 | --- | --- |
-| Server | Paper **26.1.2** (verified on build 69) |
+| Server | Paper **26.2** (experimental channel) |
 | Java | **25** (verified on 25.0.x) |
 | Build | JDK 25 + Maven (`brew install openjdk@25 maven`) |
 | Dependencies | **None** |
@@ -190,4 +190,4 @@ If you see this in the startup log, it worked:
 - **Nothing showing?** Check that your crosshair is actually on the note block (within 6 blocks), that `/notescope status` is on, and that you have the `notescope.use` permission.
 - **Other display surfaces** (boss bar, persistent HUD, etc.) are limited for a server-side plugin. The action bar is ideal for "show only while looking, then fade."
 - **Octave numbering** uses F#3–F#5 (matching the official Minecraft Wiki). Some references write it as F#4–F#6.
-- The `paper-api` build number can track server updates (e.g. `26.1.2.build.70-stable`).
+- The `paper-api` build number can track server updates (e.g. `26.2.build.41-alpha`).
